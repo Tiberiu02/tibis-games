@@ -1,5 +1,6 @@
 import PeerTesting from "~/components/PeerTesting";
+import { iceList } from "~/networking/xirsys";
 
-export default function HomePage() {
-  return <PeerTesting />;
+export default async function HomePage() {
+  return <PeerTesting iceList={iceList} />;
 }

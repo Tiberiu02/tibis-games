@@ -1,11 +1,17 @@
 "use client";
 import { useRef, useState } from "react";
 import type Peer from "peerjs";
+import type { IceList } from "~/networking/xirsys";
 
 const PEER_ID = "tibis-games-kvbbdzbicadad";
 
-export default function PeerTesting() {
+export default function PeerTesting({ iceList }: { iceList: IceList }) {
   const peerRef = useRef<Peer>();
+  const peerOptions = {
+    config: {
+      iceServers: iceList,
+    },
+  };
 
   const [logs, setLogs] = useState<string[]>(["Welcome"]);
   const log = (message: string) => setLogs((logs) => [...logs, message]);
@@ -13,7 +19,7 @@ export default function PeerTesting() {
   const createPeer = async () => {
     log("Creating peer...");
     const Peer = (await import("peerjs")).default;
-    const peer = (peerRef.current = new Peer(PEER_ID));
+    const peer = (peerRef.current = new Peer(PEER_ID, peerOptions));
 
     peer.on("open", (id) => {
       log(`Peer created: ${id}`);
@@ -37,7 +43,7 @@ export default function PeerTesting() {
 
   const connectPeer = async () => {
     const Peer = (await import("peerjs")).default;
-    const peer = (peerRef.current = new Peer());
+    const peer = (peerRef.current = new Peer(peerOptions));
 
     peer.on("open", (id) => {
       log(`Peer created: ${id}`);
