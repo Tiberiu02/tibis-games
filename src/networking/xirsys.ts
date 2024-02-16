@@ -11,12 +11,22 @@ export type IceList = {
   credential: string;
 }[];
 
+type XirsysResponse = {
+  v: {
+    iceServers: {
+      urls: string[];
+      username: string;
+      credential: string;
+    };
+  };
+};
+
 function fetchIceServers() {
   const bodyString = JSON.stringify({
     format: "urls",
   });
 
-  let options = {
+  const options = {
     host: "global.xirsys.net",
     path: "/_turn/MyFirstApp",
     method: "PUT",
@@ -28,18 +38,19 @@ function fetchIceServers() {
     },
   };
 
-  return new Promise<IceList>((resolve, reject) => {
+  return new Promise<IceList>((resolve) => {
     console.log("Loading Xirsys ICE List...");
-    let httpreq = https.request(options, function (httpres) {
+    const httpreq = https.request(options, function (httpres) {
       let str = "";
       httpres.on("data", function (data) {
         str += data;
       });
       httpres.on("error", function (e) {
-        console.log("error: ", e);
+        console.error("Failed to load Xirsys ICE List");
+        console.error("Error: ", e);
       });
       httpres.on("end", function () {
-        const servers = [JSON.parse(str).v.iceServers] as IceList;
+        const servers = [(JSON.parse(str) as XirsysResponse).v.iceServers];
         console.log("ICE List: ", servers);
         resolve(servers);
       });
@@ -56,7 +67,7 @@ const CACHE_PATH = ".next/cache/iceList.json";
 let iceList: IceList;
 
 if (fs.existsSync(CACHE_PATH)) {
-  iceList = JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8"));
+  iceList = JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8")) as IceList;
 } else {
   iceList = await fetchIceServers();
   fs.writeFileSync(CACHE_PATH, JSON.stringify(iceList));
