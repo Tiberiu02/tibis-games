@@ -9,9 +9,15 @@ export default function PeerTesting({ iceList }: { iceList: IceList }) {
   const peerRef = useRef<Peer>();
   const peerOptions = {
     config: {
-      iceServers: iceList,
+      iceServers: iceList.urls.map((url) => ({
+        urls: url,
+        username: iceList.username,
+        credential: iceList.credential,
+      })),
     },
   };
+
+  console.log("PeerOptions: ", peerOptions.config.iceServers);
 
   const [logs, setLogs] = useState<string[]>(["Welcome"]);
   const log = (message: string) => setLogs((logs) => [...logs, message]);

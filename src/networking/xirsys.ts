@@ -9,15 +9,11 @@ export type IceList = {
   urls: string[];
   username: string;
   credential: string;
-}[];
+};
 
 type XirsysResponse = {
   v: {
-    iceServers: {
-      urls: string[];
-      username: string;
-      credential: string;
-    };
+    iceServers: IceList;
   };
 };
 
@@ -50,7 +46,7 @@ function fetchIceServers() {
         console.error("Error: ", e);
       });
       httpres.on("end", function () {
-        const servers = [(JSON.parse(str) as XirsysResponse).v.iceServers];
+        const servers = (JSON.parse(str) as XirsysResponse).v.iceServers;
         console.log("ICE List: ", servers);
         resolve(servers);
       });
