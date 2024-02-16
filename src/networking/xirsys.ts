@@ -5,7 +5,7 @@ import https from "https";
 import { env } from "~/env";
 import fs from "fs";
 
-export type IceList = {
+export type IceServer = {
   urls: string[];
   username: string;
   credential: string;
@@ -13,7 +13,7 @@ export type IceList = {
 
 type XirsysResponse = {
   v: {
-    iceServers: IceList;
+    iceServers: IceServer;
   };
 };
 
@@ -35,7 +35,7 @@ function fetchIceServers() {
   };
 
   console.log("Loading Xirsys ICE List...");
-  return new Promise<IceList>((resolve) => {
+  return new Promise<IceServer>((resolve) => {
     const httpreq = https.request(options, function (httpres) {
       let str = "";
       httpres.on("data", function (data) {
@@ -60,10 +60,10 @@ function fetchIceServers() {
 
 const CACHE_PATH = ".next/cache/iceList.json";
 
-export const iceList = new Promise<IceList>((resolve) => {
+export const iceList = new Promise<IceServer>((resolve) => {
   if (fs.existsSync(CACHE_PATH)) {
     console.log("Loading ICE List from cache...");
-    const list = JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8")) as IceList;
+    const list = JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8")) as IceServer;
     console.log("ICE List: ", list);
     resolve(list);
   } else {

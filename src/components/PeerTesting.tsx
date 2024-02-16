@@ -1,21 +1,20 @@
 "use client";
 import { useRef, useState } from "react";
 import type Peer from "peerjs";
-import type { IceList } from "~/networking/xirsys";
+import type { IceServer } from "~/networking/xirsys";
 
 const PEER_ID = "tibis-games-kvbbdzbicadad";
 
-export default function PeerTesting({ iceList }: { iceList: IceList }) {
+export default function PeerTesting({ iceServer }: { iceServer: IceServer }) {
   const peerRef = useRef<Peer>();
   const peerOptions = {
     config: {
-      iceServers: iceList.urls.map((url) => ({
-        urls: url,
-        username: iceList.username,
-        credential: iceList.credential,
-      })),
+      iceServers: [iceServer],
     },
+    debug: 2,
   };
+
+  new RTCPeerConnection({ iceServers: [iceServer] });
 
   console.log("PeerOptions: ", peerOptions.config.iceServers);
 
