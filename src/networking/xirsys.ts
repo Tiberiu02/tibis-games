@@ -34,8 +34,8 @@ function fetchIceServers() {
     },
   };
 
+  console.log("Loading Xirsys ICE List...");
   return new Promise<IceList>((resolve) => {
-    console.log("Loading Xirsys ICE List...");
     const httpreq = https.request(options, function (httpres) {
       let str = "";
       httpres.on("data", function (data) {
@@ -60,13 +60,16 @@ function fetchIceServers() {
 
 const CACHE_PATH = ".next/cache/iceList.json";
 
-let iceList: IceList;
-
-if (fs.existsSync(CACHE_PATH)) {
-  iceList = JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8")) as IceList;
-} else {
-  iceList = await fetchIceServers();
-  fs.writeFileSync(CACHE_PATH, JSON.stringify(iceList));
-}
-
-export { iceList };
+export const iceList = new Promise<IceList>((resolve) => {
+  if (fs.existsSync(CACHE_PATH)) {
+    console.log("Loading ICE List from cache...");
+    const list = JSON.parse(fs.readFileSync(CACHE_PATH, "utf-8")) as IceList;
+    console.log("ICE List: ", list);
+    resolve(list);
+  } else {
+    void fetchIceServers().then((list) => {
+      fs.writeFileSync(CACHE_PATH, JSON.stringify(list));
+      resolve(list);
+    });
+  }
+});
