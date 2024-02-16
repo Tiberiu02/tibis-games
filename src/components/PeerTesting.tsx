@@ -11,10 +11,8 @@ export default function PeerTesting({ iceServer }: { iceServer: IceServer }) {
     config: {
       iceServers: [iceServer],
     },
-    debug: 2,
+    debug: 3,
   };
-
-  new RTCPeerConnection({ iceServers: [iceServer] });
 
   console.log("PeerOptions: ", peerOptions.config.iceServers);
 
