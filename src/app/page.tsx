@@ -1,5 +1,10 @@
-import PeerTesting from "~/components/PeerTesting";
+import { Suspense } from "react";
+import AirHokey from "~/components/AirHockey";
 
 export default async function HomePage() {
-  return <PeerTesting />;
+  return (
+    <Suspense>
+      <AirHokey />
+    </Suspense>
+  );
 }
