@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import type Peer from "peerjs";
-import { iceServers } from "~/networking/iceServers";
+import { iceServers } from "~/networking/peering/config";
 
 const PEER_ID = "tibis-games-kvbbdzbicadad";
 
