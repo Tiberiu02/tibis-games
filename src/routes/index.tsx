@@ -1,5 +1,6 @@
-import { A } from "@solidjs/router";
+import { A, useSearchParams } from "@solidjs/router";
 import { Button } from "~/components/Button";
+import { Game } from "~/components/game";
 
 function generateRoomId() {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -13,11 +14,17 @@ function generateRoomId() {
 }
 
 export default function Home() {
+  const [params, setParams] = useSearchParams<{ room: string }>();
+
   return (
     <main>
-      <A href={`/game?room=${generateRoomId()}`}>
-        <Button>Create Room</Button>
-      </A>
+      {params.room ? (
+        <Game />
+      ) : (
+        <Button onClick={() => setParams({ room: generateRoomId() })}>
+          Create Room
+        </Button>
+      )}
     </main>
   );
 }

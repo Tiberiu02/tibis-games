@@ -6,7 +6,7 @@ import { connectionStatus, myId } from "~/networking/state";
 import { remotePlayer } from "~/state/actions/remote";
 import { gameState } from "~/state/gameState";
 
-export default function Game() {
+export function Game() {
   const [{ room }] = useSearchParams<{ room: string }>();
   const [name, setName] = createSignal("");
 
