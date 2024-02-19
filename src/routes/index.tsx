@@ -1,6 +1,6 @@
-import { A, useSearchParams } from "@solidjs/router";
+import { useSearchParams } from "@solidjs/router";
 import { Button } from "~/components/Button";
-import { Game } from "~/components/game";
+import { Game } from "~/components/Game";
 
 function generateRoomId() {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
